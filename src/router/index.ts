@@ -17,6 +17,12 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
+    // Catch-all route to handle any unmatched paths
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      redirect: '/'
+    }
   ],
 })
 
