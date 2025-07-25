@@ -36,30 +36,35 @@ The app is deployed at: [https://flintshadey.github.io/expressersweepstakesadmin
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/FlintShadey/expressersweepstakesadmin.git
    cd expressersweepstakesadmin
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Environment Configuration**
-   
+
    The app uses environment variables for Supabase configuration. Create a `.env` file:
+
    ```env
    VITE_SUPABASE_URL=https://ceyopueguqklwwdjkvcf.supabase.co
    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
 4. **Start development server**
+
    ```bash
    npm run dev
    ```
 
 5. **Build for production**
+
    ```bash
    npm run build
    ```
@@ -104,6 +109,7 @@ The project is configured for automatic deployment to GitHub Pages:
 ### Manual Deployment
 
 1. **Build the project**
+
    ```bash
    npm run build
    ```
@@ -145,6 +151,7 @@ The project is configured for automatic deployment to GitHub Pages:
 ### Build Configuration
 
 The app is configured with:
+
 - **Base Path** - `/expressersweepstakesadmin/` for GitHub Pages
 - **PWA Configuration** - Service worker and manifest generation
 - **TypeScript Support** - Full TypeScript configuration
