@@ -18,34 +18,11 @@ export default defineConfig(() => {
       vueDevTools(),
       VitePWA({
         registerType: "autoUpdate",
+        strategies: 'injectManifest',
+        srcDir: 'public',
+        filename: 'sw.js',
         workbox: {
-          globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
-          navigateFallback: basePath + "index.html",
-          navigateFallbackDenylist: [/^\/_/, /\/[^/?]+\.[^/]+$/],
-          runtimeCaching: [
-            {
-              urlPattern: ({ request }) => request.destination === "document",
-              handler: "NetworkFirst",
-              options: {
-                cacheName: "documents",
-                expiration: {
-                  maxEntries: 10,
-                  maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
-                },
-              },
-            },
-            {
-              urlPattern: ({ request }) => request.destination === "image",
-              handler: "CacheFirst",
-              options: {
-                cacheName: "images",
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-                },
-              },
-            },
-          ],
+          globPatterns: ["**/*.{js,css,html,ico,png,svg}"]
         },
         includeAssets: [
           "favicon.ico",
@@ -63,8 +40,9 @@ export default defineConfig(() => {
           background_color: "#121212",
           display: "standalone",
           orientation: "portrait-primary",
-          start_url: basePath,
-          scope: basePath,
+          start_url: "/expressersweepstakesadmin/",
+          scope: "/expressersweepstakesadmin/",
+          id: "/expressersweepstakesadmin/",
           categories: ["business", "productivity", "utilities"],
           icons: [
             {
