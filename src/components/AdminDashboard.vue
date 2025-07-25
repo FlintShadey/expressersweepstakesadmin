@@ -500,7 +500,7 @@ const deleteWinnerFromDatabase = async () => {
   console.log("Attempting to delete winner:", selectedWinner.value);
   console.log("Winner ID:", selectedWinner.value.id);
   isDeletingWinner.value = true;
-  
+
   try {
     // First, try the direct delete approach
     const { data, error } = await supabase
@@ -513,28 +513,32 @@ const deleteWinnerFromDatabase = async () => {
 
     if (error) {
       console.error("Direct delete failed:", error);
-      
+
       // If direct delete fails, it's likely due to RLS policies
       // Try marking as deleted instead (soft delete)
       console.log("Attempting soft delete (marking as deleted)...");
-      
+
       const { data: updateData, error: updateError } = await supabase
         .from("sweepstakes_entries")
-        .update({ 
+        .update({
           notes: "[DELETED] " + (selectedWinner.value.notes || ""),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq("id", selectedWinner.value.id)
         .select();
 
       if (updateError) {
         console.error("Soft delete also failed:", updateError);
-        throw new Error("Cannot delete entry. This may be due to database security policies. Please contact the administrator.");
+        throw new Error(
+          "Cannot delete entry. This may be due to database security policies. Please contact the administrator."
+        );
       }
-      
+
       console.log("Soft delete succeeded:", updateData);
     } else if (!data || data.length === 0) {
-      throw new Error("No rows were deleted - the entry may have been removed already or database policies are blocking the operation.");
+      throw new Error(
+        "No rows were deleted - the entry may have been removed already or database policies are blocking the operation."
+      );
     } else {
       console.log("Direct delete succeeded:", data);
     }
