@@ -63,7 +63,7 @@ export default defineConfig(() => {
           background_color: "#121212",
           display: "standalone",
           orientation: "portrait-primary",
-          start_url: "./",
+          start_url: basePath,
           scope: basePath,
           categories: ["business", "productivity", "utilities"],
           icons: [
