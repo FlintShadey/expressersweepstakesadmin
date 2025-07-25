@@ -250,12 +250,16 @@
         <v-btn text color="white" @click="snackbar.show = false"> Close </v-btn>
       </template>
     </v-snackbar>
+
+    <!-- PWA Install Prompt -->
+    <PWAInstallPrompt />
   </v-app>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { supabase, type SweepstakesEntry } from "@/lib/supabase";
+import PWAInstallPrompt from "./PWAInstallPrompt.vue";
 
 // Reactive state
 const entries = ref<SweepstakesEntry[]>([]);

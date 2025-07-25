@@ -8,21 +8,32 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
     <meta name="theme-color" content="#1976d2" />
+    <meta name="msapplication-TileColor" content="#1976d2" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
-    <meta name="apple-mobile-web-app-title" content="Sweepstakes Admin" />
+    <meta name="apple-mobile-web-app-title" content="Sweepstakes" />
     <meta
       name="description"
       content="Admin interface for managing sweepstakes entries"
     />
 
-    <!-- PWA Icons -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- PWA Icons for different platforms -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico" />
     <link rel="mask-icon" href="/masked-icon.svg" color="#1976d2" />
+    
+    <!-- Microsoft Tile -->
+    <meta name="msapplication-TileImage" content="/pwa-192x192.png" />
+    
+    <!-- Additional iOS Safari specific tags -->
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
