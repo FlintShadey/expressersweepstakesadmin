@@ -19,10 +19,10 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
         runtimeCaching: [
           {
-            urlPattern: ({ request }) => request.destination === 'document',
-            handler: 'NetworkFirst',
+            urlPattern: ({ request }) => request.destination === "document",
+            handler: "NetworkFirst",
             options: {
-              cacheName: 'documents',
+              cacheName: "documents",
               expiration: {
                 maxEntries: 10,
                 maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
@@ -32,12 +32,12 @@ export default defineConfig({
         ],
       },
       includeAssets: [
-        "favicon.ico", 
-        "apple-touch-icon.png", 
+        "favicon.ico",
+        "apple-touch-icon.png",
         "apple-touch-icon-180x180.png",
         "masked-icon.svg",
         "pwa-192x192.png",
-        "pwa-512x512.png"
+        "pwa-512x512.png",
       ],
       manifest: {
         name: "Expresser Sweepstakes Admin",
@@ -47,8 +47,8 @@ export default defineConfig({
         background_color: "#121212",
         display: "standalone",
         orientation: "portrait-primary",
-        start_url: "/",
-        scope: "/",
+        start_url: process.env.NODE_ENV === "production" ? "/expressersweepstakesadmin/" : "/",
+        scope: process.env.NODE_ENV === "production" ? "/expressersweepstakesadmin/" : "/",
         categories: ["business", "productivity", "utilities"],
         icons: [
           {
