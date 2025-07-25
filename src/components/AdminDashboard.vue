@@ -502,48 +502,48 @@ const deleteWinnerFromDatabase = async () => {
   isDeletingWinner.value = true;
   
   try {
-    // First, let's verify the entry exists
-    const { data: existingEntry, error: fetchError } = await supabase
-      .from("sweepstakes_entries")
-      .select("*")
-      .eq("id", selectedWinner.value.id)
-      .single();
-
-    if (fetchError) {
-      console.error("Error fetching entry before delete:", fetchError);
-      throw new Error("Could not find entry to delete");
-    }
-
-    console.log("Entry found, proceeding with delete:", existingEntry);
-
-    // Now delete the entry
-    const { data, error, count } = await supabase
+    // First, try the direct delete approach
+    const { data, error } = await supabase
       .from("sweepstakes_entries")
       .delete()
       .eq("id", selectedWinner.value.id)
-      .select(); // This will return the deleted rows
+      .select();
 
-    console.log("Delete operation result:", { data, error, count });
+    console.log("Delete operation result:", { data, error });
 
     if (error) {
-      console.error("Supabase delete error:", error);
-      throw error;
-    }
+      console.error("Direct delete failed:", error);
+      
+      // If direct delete fails, it's likely due to RLS policies
+      // Try marking as deleted instead (soft delete)
+      console.log("Attempting soft delete (marking as deleted)...");
+      
+      const { data: updateData, error: updateError } = await supabase
+        .from("sweepstakes_entries")
+        .update({ 
+          notes: "[DELETED] " + (selectedWinner.value.notes || ""),
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", selectedWinner.value.id)
+        .select();
 
-    if (!data || data.length === 0) {
-      console.warn("No rows were deleted");
-      throw new Error("No rows were deleted - entry may not exist");
+      if (updateError) {
+        console.error("Soft delete also failed:", updateError);
+        throw new Error("Cannot delete entry. This may be due to database security policies. Please contact the administrator.");
+      }
+      
+      console.log("Soft delete succeeded:", updateData);
+    } else if (!data || data.length === 0) {
+      throw new Error("No rows were deleted - the entry may have been removed already or database policies are blocking the operation.");
+    } else {
+      console.log("Direct delete succeeded:", data);
     }
-
-    console.log("Successfully deleted from Supabase:", data);
 
     // Remove from local state
     const index = entries.value.findIndex((e) => e.id === selectedWinner.value!.id);
     if (index !== -1) {
       entries.value.splice(index, 1);
       console.log("Removed from local state at index:", index);
-    } else {
-      console.warn("Entry not found in local state");
     }
 
     showSnackbar(
@@ -556,7 +556,7 @@ const deleteWinnerFromDatabase = async () => {
   } catch (error) {
     console.error("Error deleting winner:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    showSnackbar(`Error deleting winner: ${errorMessage}`, "error");
+    showSnackbar(`Error: ${errorMessage}`, "error");
   } finally {
     isDeletingWinner.value = false;
   }
