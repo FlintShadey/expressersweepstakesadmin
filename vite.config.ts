@@ -20,17 +20,9 @@ export default defineConfig(() => {
         registerType: "autoUpdate",
         workbox: {
           globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
-          navigateFallback: "/expressersweepstakesadmin/",
+          navigateFallback: basePath + "index.html",
           navigateFallbackDenylist: [/^\/_/, /\/[^/?]+\.[^/]+$/],
           runtimeCaching: [
-            {
-              urlPattern: /^\/expressersweepstakesadmin\/.*/,
-              handler: "NetworkFirst",
-              options: {
-                cacheName: "pages",
-                networkTimeoutSeconds: 5,
-              },
-            },
             {
               urlPattern: ({ request }) => request.destination === "document",
               handler: "NetworkFirst",

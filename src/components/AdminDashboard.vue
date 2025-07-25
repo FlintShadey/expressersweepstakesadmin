@@ -492,21 +492,58 @@ const confirmDeleteWinner = () => {
 };
 
 const deleteWinnerFromDatabase = async () => {
-  if (!selectedWinner.value) return;
+  if (!selectedWinner.value) {
+    console.log("No selected winner to delete");
+    return;
+  }
 
+  console.log("Attempting to delete winner:", selectedWinner.value);
+  console.log("Winner ID:", selectedWinner.value.id);
   isDeletingWinner.value = true;
+  
   try {
-    const { error } = await supabase
+    // First, let's verify the entry exists
+    const { data: existingEntry, error: fetchError } = await supabase
+      .from("sweepstakes_entries")
+      .select("*")
+      .eq("id", selectedWinner.value.id)
+      .single();
+
+    if (fetchError) {
+      console.error("Error fetching entry before delete:", fetchError);
+      throw new Error("Could not find entry to delete");
+    }
+
+    console.log("Entry found, proceeding with delete:", existingEntry);
+
+    // Now delete the entry
+    const { data, error, count } = await supabase
       .from("sweepstakes_entries")
       .delete()
-      .eq("id", selectedWinner.value.id);
+      .eq("id", selectedWinner.value.id)
+      .select(); // This will return the deleted rows
 
-    if (error) throw error;
+    console.log("Delete operation result:", { data, error, count });
+
+    if (error) {
+      console.error("Supabase delete error:", error);
+      throw error;
+    }
+
+    if (!data || data.length === 0) {
+      console.warn("No rows were deleted");
+      throw new Error("No rows were deleted - entry may not exist");
+    }
+
+    console.log("Successfully deleted from Supabase:", data);
 
     // Remove from local state
     const index = entries.value.findIndex((e) => e.id === selectedWinner.value!.id);
     if (index !== -1) {
       entries.value.splice(index, 1);
+      console.log("Removed from local state at index:", index);
+    } else {
+      console.warn("Entry not found in local state");
     }
 
     showSnackbar(
@@ -518,7 +555,8 @@ const deleteWinnerFromDatabase = async () => {
     closeWinnerDialog();
   } catch (error) {
     console.error("Error deleting winner:", error);
-    showSnackbar("Error deleting winner from database", "error");
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    showSnackbar(`Error deleting winner: ${errorMessage}`, "error");
   } finally {
     isDeletingWinner.value = false;
   }
