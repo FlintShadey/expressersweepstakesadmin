@@ -18,11 +18,11 @@ export default defineConfig(() => {
       vueDevTools(),
       VitePWA({
         registerType: "autoUpdate",
-        strategies: 'injectManifest',
-        srcDir: 'public',
-        filename: 'sw.js',
+        strategies: "injectManifest",
+        srcDir: "public",
+        filename: "sw.js",
         workbox: {
-          globPatterns: ["**/*.{js,css,html,ico,png,svg}"]
+          globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
         },
         includeAssets: [
           "favicon.ico",

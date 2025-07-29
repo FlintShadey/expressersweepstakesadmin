@@ -140,6 +140,30 @@
             </template>
           </v-data-table>
         </v-card>
+
+        <!-- Clear Database Section -->
+        <v-row class="mt-4">
+          <v-col cols="12">
+            <v-card>
+              <v-card-text class="pa-3 text-center">
+                <v-btn
+                  color="red-darken-2"
+                  @click="confirmClearDatabase"
+                  :disabled="totalEntries === 0"
+                  :loading="isClearing"
+                  variant="outlined"
+                  size="large"
+                >
+                  <v-icon left>mdi-delete-sweep</v-icon>
+                  Clear All Database Entries
+                </v-btn>
+                <div class="text-caption text-grey mt-2">
+                  Warning: This will permanently delete all sweepstakes entries
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
 
